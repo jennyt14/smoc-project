@@ -1,0 +1,19 @@
+---
+title: "SMOC Data Analysis"
+author: "Jenny Tran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+```
+```{r}
+df <- read.csv("SMOCDemoGCA.xlsx - SMOCDemoGCA.csv")
+```
+
