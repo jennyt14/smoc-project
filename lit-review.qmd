@@ -1,0 +1,23 @@
+---
+title: "lit-review"
+format: html
+editor: visual
+---
+
+# List of research topic claims
+
+Goal is to organize your list by a specific topic
+
+### **Topic:** Gender Dynamics in Online Group Collaborations
+
+#### Introduction
+
+**Claim 1:** Gender impacts how an individual interacts and communicates in groups.\
+**\
+Claim 2:** Males are more likely to express disagreement, whereas females tend to express agreement. Males are competitive, whereas females are cooperative.
+
+The study from Guiller & Durndell, 2006 analyzed the linguistic styles between the groups. They found that females "made contributions containing empathic utterances, personal experience, self-disclosure, references to own emotion and references to own feelings" and males "sent postings containing controversial statements, humour, strong assertions and presuppositions". They talk about how previous studies show a bigger distinction between males and females, but they saw that the gender gap may be closing in terms of online education.
+
+**Claim 3:** Females are more likely to participate and engage in online discussion than males.
+
+Lin et. al, 2019 used group communication analysis (GCA) to analyze the communication between males and females. They saw that males tend to be chatterers and lurkers, and females were drivers and influential actors.
