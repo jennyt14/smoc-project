@@ -4,23 +4,45 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
+## Sample
 ```{r}
-df <- read.csv("SMOCDemoGCA.xlsx - SMOCDemoGCA.csv")
+library(ggplot2)
+library(tidyverse)
 ```
 
-You can add options to executable code like this
 
+Import Data
 ```{r}
-#| echo: false
-2 * 2
+df <- read.csv("/Users/jennytran/Documents/GitHub/smoc-project/data/SMOCDemoGCA.xlsx - SMOCDemoGCA.csv")
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Select Variables of interest to your study and save to new dataframe
+```{r}
+df1 <- df[c('person_id','Day','chat_room_id','z.participation',
+ 'z.social.impact',
+ 'z.overall.responsivity',
+ 'z.internal.cohesion',
+ 'z.newness',
+ 'z.comm.density', 'Sex')]
+```
+
+Report on the total observations in the data
+```{r}
+dim(df1)
+```
+
+Report on the valid observations in each variable
+```{r}
+glimpse(df1)
+```
+
+Subset the data to include valid cases only and save to a new data frame
+```{r}
+df1 <- na.omit(df1)
+```
+
+Report the final sample
+```{r}
+dim(df1)
+```
+
