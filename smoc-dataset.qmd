@@ -5,18 +5,16 @@ editor: visual
 ---
 
 ## Sample
+
 ```{r}
 library(ggplot2)
 library(tidyverse)
 ```
 
-
-Import Data
 ```{r}
 df <- read.csv("/Users/jennytran/Documents/GitHub/smoc-project/data/SMOCDemoGCA.xlsx - SMOCDemoGCA.csv")
 ```
 
-Select Variables of interest to your study and save to new dataframe
 ```{r}
 df1 <- df[c('person_id','Day','chat_room_id','z.participation',
  'z.social.impact',
@@ -26,23 +24,15 @@ df1 <- df[c('person_id','Day','chat_room_id','z.participation',
  'z.comm.density', 'Sex')]
 ```
 
-Report on the total observations in the data
 ```{r}
 dim(df1)
 ```
 
-Report on the valid observations in each variable
 ```{r}
-glimpse(df1)
+df2 <- na.omit(df1)
+df2 <- df2[with(df2, ave(chat_room_id, chat_room_id, FUN = length) == 4),]
 ```
 
-Subset the data to include valid cases only and save to a new data frame
 ```{r}
-df1 <- na.omit(df1)
+dim(df2)
 ```
-
-Report the final sample
-```{r}
-dim(df1)
-```
-
