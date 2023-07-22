@@ -1,38 +1,215 @@
 ---
-title: "smoc-dataset"
+title: "Examining the Relationship between Gender Composition and Group Communication in Online Team Learning Environments"
 format: html
 editor: visual
 ---
 
-## Sample
+# Research Goal
 
-```{r}
-library(ggplot2)
-library(tidyverse)
+The goal of the research is to investigate how communication dynamics among individuals in group interactions are influenced by group composition and gender.
+
+# Research Questions & Variables
+
+**RQ1**: How do communication dynamics differ between males and females in online environments? `Sex`, `z.participation`, `z.social.impact`, `z.overall.responsivity`, `z.internal.cohesion`, `z.newness`, and `z.comm.density`
+
+**RQ2**: How do sociocognitive communications change for males and females across gender group composition? `Sex`, `chat_room_id`, `z.participation`, `z.social.impact`, `z.overall.responsivity`, `z.internal.cohesion`, `z.newness`, and `z.comm.density`
+
+# Load Modules
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy
 ```
 
-```{r}
-df <- read.csv("/Users/jennytran/Documents/GitHub/smoc-project/data/SMOCDemoGCA.xlsx - SMOCDemoGCA.csv")
+# Load SMOC Data
+
+```{python}
+df = pd.read_csv('/Users/jennytran/Documents/GitHub/smoc-project/data/SMOCDemoGCA.xlsx - SMOCDemoGCA.csv')
 ```
 
-```{r}
-df1 <- df[c('person_id','Day','chat_room_id','z.participation',
+# Data Selection
+
+Select variables that I'm interested in exploring, remove empty rows, and filtering for individuals who were in groups of 4.
+
+```{python}
+df = df[['person_id','chat_room_id','z.participation',
  'z.social.impact',
  'z.overall.responsivity',
  'z.internal.cohesion',
  'z.newness',
- 'z.comm.density', 'Sex')]
+ 'z.comm.density', 'Sex']]
+ 
+df = df.dropna().reset_index(drop=True)
+
+df = df[df.groupby('chat_room_id')['chat_room_id'].transform('size') == 4].reset_index(drop=True)
 ```
 
-```{r}
-dim(df1)
+# Sample Descriptives
+
+## Group Descriptives (Frequency)
+
+```{python}
+len(df)
 ```
 
-```{r}
-df2 <- na.omit(df1)
-df2 <- df2[with(df2, ave(chat_room_id, chat_room_id, FUN = length) == 4),]
+## Gender Descriptives (Frequency)
+
+In the dataset, males are represented by `1.0` and females are represented by `2.0`.
+
+```{python}
+male = df[df['Sex'] == 1]
+female = df[df['Sex'] == 2]
+
+print('male:', len(male['person_id'].unique()))
+print('female:', len(female['person_id'].unique()))
 ```
 
-```{r}
-dim(df2)
+## Results
+
+# RQ1: How do communication dynamics differ between males and females in online environments?
+```{python}
+num = [1.0, 2.0]
+z_par = []
+z_soc = []
+z_overesp = []
+z_internal = []
+z_new = []
+z_dens = []
+for n in num:
+    y = df.loc[df['Sex'] == n]
+    z_par.append(sum(y['z.participation']) / len(y))
+    z_soc.append(sum(y['z.social.impact']) / len(y))
+    z_overesp.append(sum(y['z.overall.responsivity']) / len(y))
+    z_internal.append(sum(y['z.internal.cohesion']) / len(y))
+    z_new.append(sum(y['z.newness']) / len(y))
+    z_dens.append(sum(y['z.comm.density']) / len(y))
+
+plotdata = pd.DataFrame({
+    "participation":z_par,
+    "social impact":z_soc,
+    "overall responsivity":z_overesp,
+    "internal cohesion":z_internal,
+    "newness":z_new,
+    "communication density":z_dens
+
+    }, 
+    index=['male', 'female']
+)
+
+plotdata = plotdata + .15
+plotdata = plotdata.transpose()
+
+code = ['#6cc0e5', '#fb4f4f']
+plotdata.plot(kind="bar", color = code, edgecolor = 'black')
+plt.ylabel("Mean")
+plt.xticks(rotation=0, fontsize = 7)
+plt.legend()
+plt.show()
+```
+
+## RQ2: How do sociocognitive communications change for males and females across gender group composition?
+
+```{python}
+sex_lst = []
+num_females = []
+for n in df['chat_room_id']:
+  a = df[df['chat_room_id'] == n]
+  temp_sex = []
+  for i in a['Sex']:
+    temp_sex.append(i)
+  sex_lst.append(temp_sex)
+for n in sex_lst:
+  num_females.append(n.count(2))
+df['Number of Females'] = num_females
+```
+
+### Mean measure for female students across the group composition
+```{python}
+df_fem = df.loc[df['Sex']==2]
+df_fem = df_fem.drop(df_fem.loc[df_fem['Number of Females']==4].index)
+df_fem.reset_index(drop = True)
+
+num = [1,2,3]
+z_par = []
+z_soc = []
+z_overesp = []
+z_internal = []
+z_new = []
+z_dens = []
+for n in num:
+    y = df_fem.loc[df_fem['Number of Females'] == n]
+    z_par.append(sum(y['z.participation']) / len(y))
+    z_soc.append(sum(y['z.social.impact']) / len(y))
+    z_overesp.append(sum(y['z.overall.responsivity']) / len(y))
+    z_internal.append(sum(y['z.internal.cohesion']) / len(y))
+    z_new.append(sum(y['z.newness']) / len(y))
+    z_dens.append(sum(y['z.comm.density']) / len(y))
+
+plotdata = pd.DataFrame({
+    "participation":z_par,
+    "social impact":z_soc,
+    "overall responsivity":z_overesp,
+    "internal cohesion":z_internal,
+    "newness":z_new,
+    "communication density":z_dens
+
+    }, 
+    index=['female minority', 'gender parity', 'female majority']
+)
+
+plotdata = plotdata + .15
+plotdata = plotdata.transpose()
+
+CB_color_cycle = ['#6cc0e5', '#fbc93d', '#fb4f4f']
+plotdata.plot(kind="bar", color = CB_color_cycle, edgecolor = 'black')
+plt.ylabel("Mean")
+plt.xticks(rotation=0, fontsize = 7)
+plt.legend()
+plt.show()
+```
+### Mean measure for male students across the group composition
+```{python}
+df_male = df.loc[df['Sex']==1]
+df_male = df_male.drop(df_male.loc[df_male['Number of Females']==0].index)
+df_male.reset_index(drop = True)
+
+num = [1,2,3]
+z_par = []
+z_soc = []
+z_overesp = []
+z_internal = []
+z_new = []
+z_dens = []
+for n in num:
+    y = df_male.loc[df_male['Number of Females'] == n]
+    z_par.append(sum(y['z.participation']) / len(y))
+    z_soc.append(sum(y['z.social.impact']) / len(y))
+    z_overesp.append(sum(y['z.overall.responsivity']) / len(y))
+    z_internal.append(sum(y['z.internal.cohesion']) / len(y))
+    z_new.append(sum(y['z.newness']) / len(y))
+    z_dens.append(sum(y['z.comm.density']) / len(y))
+
+plotdata = pd.DataFrame({
+    "participation":z_par,
+    "social impact":z_soc,
+    "overall responsivity":z_overesp,
+    "internal cohesion":z_internal,
+    "newness":z_new,
+    "communication density":z_dens
+
+    }, 
+    index=['female minority', 'gender parity', 'female majority']
+)
+
+plotdata = plotdata + .15
+plotdata = plotdata.transpose()
+
+plotdata.plot(kind="bar", color = CB_color_cycle, edgecolor = 'black')
+plt.ylabel("Mean")
+plt.xticks(rotation=0, fontsize = 7)
+plt.legend()
+plt.show()
 ```
