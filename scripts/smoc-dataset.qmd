@@ -70,6 +70,7 @@ print('female:', len(female['person_id'].unique()))
 ## Results
 
 # RQ1: How do communication dynamics differ between males and females in online environments?
+
 ```{python}
 num = [1.0, 2.0]
 z_par = []
@@ -107,6 +108,7 @@ plotdata.plot(kind="bar", color = code, edgecolor = 'black')
 plt.ylabel("Mean")
 plt.xticks(rotation=0, fontsize = 7)
 plt.legend()
+plt.savefig('/Users/jennytran/Documents/GitHub/smoc-project/outputs/gca_gender.png')
 plt.show()
 ```
 
@@ -127,6 +129,7 @@ df['Number of Females'] = num_females
 ```
 
 ### Mean measure for female students across the group composition
+
 ```{python}
 df_fem = df.loc[df['Sex']==2]
 df_fem = df_fem.drop(df_fem.loc[df_fem['Number of Females']==4].index)
@@ -168,9 +171,12 @@ plotdata.plot(kind="bar", color = CB_color_cycle, edgecolor = 'black')
 plt.ylabel("Mean")
 plt.xticks(rotation=0, fontsize = 7)
 plt.legend()
+plt.savefig('/Users/jennytran/Documents/GitHub/smoc-project/outputs/gca_females.png')
 plt.show()
 ```
+
 ### Mean measure for male students across the group composition
+
 ```{python}
 df_male = df.loc[df['Sex']==1]
 df_male = df_male.drop(df_male.loc[df_male['Number of Females']==0].index)
@@ -211,5 +217,6 @@ plotdata.plot(kind="bar", color = CB_color_cycle, edgecolor = 'black')
 plt.ylabel("Mean")
 plt.xticks(rotation=0, fontsize = 7)
 plt.legend()
+plt.savefig('/Users/jennytran/Documents/GitHub/smoc-project/outputs/gca_males.png')
 plt.show()
 ```
