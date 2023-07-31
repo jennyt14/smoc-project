@@ -10,9 +10,13 @@ The goal of the research is to investigate how communication dynamics among indi
 
 # Research Questions & Variables
 
-**RQ1**: How do communication dynamics differ between males and females in online environments? `Sex`, `z.participation`, `z.social.impact`, `z.overall.responsivity`, `z.internal.cohesion`, `z.newness`, and `z.comm.density`
+**RQ1**: How do communication dynamics differ between males and females in online environments?
 
-**RQ2**: How do sociocognitive communications change for males and females across gender group composition? `Sex`, `chat_room_id`, `z.participation`, `z.social.impact`, `z.overall.responsivity`, `z.internal.cohesion`, `z.newness`, and `z.comm.density`
+`Sex`, `z.participation`, `z.social.impact`, `z.overall.responsivity`, `z.internal.cohesion`, `z.newness`, and `z.comm.density`
+
+**RQ2**: How do sociocognitive communications change for males and females across gender group composition?
+
+`Sex`, `chat_room_id`, `z.participation`, `z.social.impact`, `z.overall.responsivity`, `z.internal.cohesion`, `z.newness`, and `z.comm.density`
 
 # Load Modules
 
@@ -106,13 +110,13 @@ plotdata = plotdata.transpose()
 code = ['#6cc0e5', '#fb4f4f']
 plotdata.plot(kind="bar", color = code, edgecolor = 'black')
 plt.ylabel("Mean")
-plt.xticks(rotation=0, fontsize = 7)
+plt.xticks(rotation=0, fontsize = 6)
 plt.legend()
 plt.savefig('/Users/jennytran/Documents/GitHub/smoc-project/outputs/gca_gender.png')
 plt.show()
 ```
 
-## RQ2: How do sociocognitive communications change for males and females across gender group composition?
+# RQ2: How do sociocognitive communications change for males and females across gender group composition?
 
 ```{python}
 sex_lst = []
@@ -169,7 +173,7 @@ plotdata = plotdata.transpose()
 CB_color_cycle = ['#6cc0e5', '#fbc93d', '#fb4f4f']
 plotdata.plot(kind="bar", color = CB_color_cycle, edgecolor = 'black')
 plt.ylabel("Mean")
-plt.xticks(rotation=0, fontsize = 7)
+plt.xticks(rotation=0, fontsize = 6)
 plt.legend()
 plt.savefig('/Users/jennytran/Documents/GitHub/smoc-project/outputs/gca_females.png')
 plt.show()
@@ -215,8 +219,60 @@ plotdata = plotdata.transpose()
 
 plotdata.plot(kind="bar", color = CB_color_cycle, edgecolor = 'black')
 plt.ylabel("Mean")
-plt.xticks(rotation=0, fontsize = 7)
+plt.xticks(rotation=0, fontsize = 6)
 plt.legend()
 plt.savefig('/Users/jennytran/Documents/GitHub/smoc-project/outputs/gca_males.png')
 plt.show()
+```
+
+# T-test comparing means of females and males GCA scores
+
+```{python}
+cols = ["participation", "social impact", "overall responsivity", "internal cohesion", "newness", "communication density"]
+t_test_all = []
+t_test_all.append(list(scipy.stats.ttest_ind(df_fem['z.participation'], df_male['z.participation'])))
+t_test_all.append(list(scipy.stats.ttest_ind(df_fem['z.social.impact'], df_male['z.social.impact'])))
+t_test_all.append(list(scipy.stats.ttest_ind(df_fem['z.overall.responsivity'], df_male['z.overall.responsivity'])))
+t_test_all.append(list(scipy.stats.ttest_ind(df_fem['z.internal.cohesion'], df_male['z.internal.cohesion'])))
+t_test_all.append(list(scipy.stats.ttest_ind(df_fem['z.newness'], df_male['z.newness'])))
+t_test_all.append(list(scipy.stats.ttest_ind(df_fem['z.comm.density'], df_male['z.comm.density'])))
+df_ttest_all = pd.DataFrame(t_test_all, columns = ['f-statistic', 'p-value'])
+df_ttest_all.insert(loc = 0, column = 'GCA dimensions', value = cols)
+df_ttest_all
+```
+
+# ANOVA comparing mean GCA scores for males across group dimensions
+
+```{python}
+anova_male = []
+f_min = df_male.loc[df_male['Number of Females'] == 1]
+g_par = df_male.loc[df_male['Number of Females'] == 2]
+f_maj = df_male.loc[df_male['Number of Females'] == 3]
+anova_male.append(list(scipy.stats.f_oneway(f_min['z.participation'], g_par['z.participation'], f_maj['z.participation'])))
+anova_male.append(list(scipy.stats.f_oneway(f_min['z.social.impact'], g_par['z.social.impact'], f_maj['z.social.impact'])))
+anova_male.append(list(scipy.stats.f_oneway(f_min['z.overall.responsivity'], g_par['z.overall.responsivity'], f_maj['z.overall.responsivity'])))
+anova_male.append(list(scipy.stats.f_oneway(f_min['z.internal.cohesion'], g_par['z.internal.cohesion'], f_maj['z.internal.cohesion'])))
+anova_male.append(list(scipy.stats.f_oneway(f_min['z.newness'], g_par['z.newness'], f_maj['z.newness'])))
+anova_male.append(list(scipy.stats.f_oneway(f_min['z.comm.density'], g_par['z.comm.density'], f_maj['z.comm.density'])))
+df_anova_male = pd.DataFrame(anova_male, columns = ['f-statistic', 'p-value'])
+df_anova_male.insert(loc = 0, column = 'GCA dimensions', value = cols)
+df_anova_male
+```
+
+# ANOVA comparing mean GCA scores for females across group dimensions
+
+```{python}
+anova_fem = []
+f_min = df_fem.loc[df_fem['Number of Females'] == 1]
+g_par = df_fem.loc[df_fem['Number of Females'] == 2]
+f_maj = df_fem.loc[df_fem['Number of Females'] == 3]
+anova_fem.append(list(scipy.stats.f_oneway(f_min['z.participation'], g_par['z.participation'], f_maj['z.participation'])))
+anova_fem.append(list(scipy.stats.f_oneway(f_min['z.social.impact'], g_par['z.social.impact'], f_maj['z.social.impact'])))
+anova_fem.append(list(scipy.stats.f_oneway(f_min['z.overall.responsivity'], g_par['z.overall.responsivity'], f_maj['z.overall.responsivity'])))
+anova_fem.append(list(scipy.stats.f_oneway(f_min['z.internal.cohesion'], g_par['z.internal.cohesion'], f_maj['z.internal.cohesion'])))
+anova_fem.append(list(scipy.stats.f_oneway(f_min['z.newness'], g_par['z.newness'], f_maj['z.newness'])))
+anova_fem.append(list(scipy.stats.f_oneway(f_min['z.comm.density'], g_par['z.comm.density'], f_maj['z.comm.density'])))
+df_anova_fem = pd.DataFrame(anova_fem, columns = ['f-statistic', 'p-value'])
+df_anova_fem.insert(loc = 0, column = 'GCA dimensions', value = cols)
+df_anova_fem
 ```
